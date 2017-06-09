@@ -1,4 +1,4 @@
-package com.github.twinsod.notes.listNote;
+package com.github.twinsod.notes.ui.listNote;
 
 import android.content.Context;
 import android.os.Bundle;

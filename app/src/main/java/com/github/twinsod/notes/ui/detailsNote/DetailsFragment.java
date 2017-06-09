@@ -1,4 +1,4 @@
-package com.github.twinsod.notes.detailsNote;
+package com.github.twinsod.notes.ui.detailsNote;
 
 
 import android.os.Bundle;
@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.github.twinsod.notes.LabApp;
 import com.github.twinsod.notes.R;
 import com.github.twinsod.notes.data.callback.NoteCallback;
-import com.github.twinsod.notes.listNote.NoteModel;
+import com.github.twinsod.notes.ui.listNote.NoteModel;
 
 import java.lang.annotation.Retention;
 

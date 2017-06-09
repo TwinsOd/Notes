@@ -1,4 +1,4 @@
-package com.github.twinsod.notes.listNote;
+package com.github.twinsod.notes.ui.listNote;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.twinsod.notes.R;
-import com.github.twinsod.notes.customView.DataTextView;
+import com.github.twinsod.notes.ui.customView.DataTextView;
 
 import java.util.List;
 

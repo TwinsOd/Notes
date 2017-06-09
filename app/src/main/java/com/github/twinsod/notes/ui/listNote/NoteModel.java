@@ -1,4 +1,4 @@
-package com.github.twinsod.notes.listNote;
+package com.github.twinsod.notes.ui.listNote;
 
 /**
  * Created by User on 08-Jun-17.

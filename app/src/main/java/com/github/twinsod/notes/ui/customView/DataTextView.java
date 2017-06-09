@@ -1,4 +1,4 @@
-package com.github.twinsod.notes.customView;
+package com.github.twinsod.notes.ui.customView;
 
 import android.content.Context;
 import android.util.AttributeSet;

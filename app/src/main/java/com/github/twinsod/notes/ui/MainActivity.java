@@ -1,14 +1,15 @@
-package com.github.twinsod.notes;
+package com.github.twinsod.notes.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
-import com.github.twinsod.notes.detailsNote.DetailsFragment;
-import com.github.twinsod.notes.listNote.ListNotesFragment;
-import com.github.twinsod.notes.listNote.NoteModel;
+import com.github.twinsod.notes.R;
+import com.github.twinsod.notes.ui.detailsNote.DetailsFragment;
+import com.github.twinsod.notes.ui.listNote.ListNotesFragment;
+import com.github.twinsod.notes.ui.listNote.NoteModel;
+
 
 import static com.github.twinsod.notes.AppConst.ADD_NEW_NOTE;
 import static com.github.twinsod.notes.AppConst.SHOW_NOTE;
