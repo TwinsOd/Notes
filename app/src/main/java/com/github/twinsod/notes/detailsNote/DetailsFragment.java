@@ -1,28 +1,26 @@
 package com.github.twinsod.notes.detailsNote;
 
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.github.twinsod.notes.LabApp;
 import com.github.twinsod.notes.R;
-import com.github.twinsod.notes.data.db.DatabaseConst;
-import com.github.twinsod.notes.data.db.DatabaseHelper;
+import com.github.twinsod.notes.data.callback.NoteCallback;
 import com.github.twinsod.notes.listNote.NoteModel;
 
 import java.lang.annotation.Retention;
-import java.util.Calendar;
 
 import static com.github.twinsod.notes.AppConst.ADD_NEW_NOTE;
 import static com.github.twinsod.notes.AppConst.EDIT_NOTE;
@@ -38,14 +36,14 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
 
     @Retention(SOURCE)
     @IntDef({ADD_NEW_NOTE, EDIT_NOTE})
-    public @interface DetailMode {
+    @interface DetailMode {
     }
 
     private static final String PARAM_TYPE = "extra_type";
     private static final String PARAM_ID = "extra_id";
     private int type;
     private long id;
-    private SQLiteDatabase database;
+    private NoteModel mNoteModel;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -76,6 +74,8 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
             type = bundle.getInt(PARAM_TYPE);
             if (bundle.containsKey(PARAM_ID)) {
                 id = bundle.getLong(PARAM_ID);
+                if (id != 0)
+                    getNoteById(id);
             }
         }
     }
@@ -99,11 +99,31 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
             case EDIT_NOTE:
             case SHOW_NOTE:
                 titleView.setText(R.string.edit_note);
-                mEditView.setText(getNoteById(id).getDescription());
+                if (!TextUtils.isEmpty(mNoteModel.getDescription()))
+                    mEditView.setText(mNoteModel.getDescription());
                 okButton.setText(R.string.save);
                 break;
         }
         return view;
+    }
+
+    private void getNoteById(long id) {
+        LabApp.getNodesRepository().getNote(id, new NoteCallback<NoteModel>() {
+            @Override
+            public void onEmit(NoteModel data) {
+                mNoteModel = data;
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Toast.makeText(getContext(), "get Note error", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -113,8 +133,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
                 if (type == ADD_NEW_NOTE)
                     saveNewNote();
                 else
-                    updateNote(id);
-                getActivity().onBackPressed();
+                    updateNote();
                 break;
             case R.id.edit_view:
                 mEditView.setInputType(InputType.TYPE_DATETIME_VARIATION_DATE);
@@ -124,63 +143,45 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void updateNote(long idNotes) {
-        openDB();
-        SQLiteStatement stmt = database.compileStatement(
-                String.format("UPDATE %s SET %s = ?1 WHERE %s = ?2",
-                        DatabaseConst.TABLE.NOTES,  DatabaseConst.NOTES_FIELDS.DESCRIPTION, DatabaseConst.NOTES_FIELDS.ID));
-        database.beginTransaction();
-
-        stmt.clearBindings();
-        stmt.bindString(1, mEditView.getText().toString());
-        stmt.bindLong(2, idNotes);
-        stmt.executeInsert();
-        database.setTransactionSuccessful();
-        database.endTransaction();
-        closeDB();
-    }
-
     private void saveNewNote() {
-        openDB();
-        SQLiteStatement stmt = database.compileStatement(
-                String.format("INSERT INTO %s ('%s', '%s', '%s') VALUES(?1, ?2, ?3)",
-                        DatabaseConst.TABLE.NOTES,
-                        DatabaseConst.NOTES_FIELDS.ID, DatabaseConst.NOTES_FIELDS.DESCRIPTION, DatabaseConst.NOTES_FIELDS.DATE));
-        database.beginTransaction();
+        LabApp.getNodesRepository().saveNote(mEditView.getText().toString(), new NoteCallback() {
+            @Override
+            public void onEmit(Object data) {
 
-        stmt.clearBindings();
-        stmt.bindString(2, mEditView.getText().toString());
-        stmt.bindLong(3, Calendar.getInstance().getTimeInMillis());
-        stmt.executeInsert();
-        database.setTransactionSuccessful();
-        database.endTransaction();
-        closeDB();
+            }
 
+            @Override
+            public void onCompleted() {
+                Toast.makeText(getContext(), "Saved id successful", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Toast.makeText(getContext(), "error saved new Note", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private NoteModel getNoteById(long id) {
-        NoteModel model = new NoteModel();
-        openDB();
-        String where = DatabaseConst.TABLE.NOTES + "." + DatabaseConst.NOTES_FIELDS.ID + " = ?";
-        String[] args = new String[]{String.valueOf(id)};
-        Cursor cursor = database.query(DatabaseConst.TABLE.NOTES, null, where, args, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            String description = cursor.getString(cursor.getColumnIndex(DatabaseConst.NOTES_FIELDS.DESCRIPTION));
-            model.setDescription(description);
-            long date = cursor.getLong(cursor.getColumnIndex(DatabaseConst.NOTES_FIELDS.DATE));
-            model.setDate(date);
-            cursor.close();
-        }
-        closeDB();
-        return model;
+    private void updateNote() {
+        LabApp.getNodesRepository().updateNote(id, mEditView.getText().toString(), new NoteCallback() {
+            @Override
+            public void onEmit(Object data) {
+
+            }
+
+            @Override
+            public void onCompleted() {
+                Toast.makeText(getContext(), "Saved id successful", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void openDB() {
-        DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-        database = databaseHelper.getWritableDatabase();
-    }
 
-    private void closeDB() {
-        database.close();
-    }
 }

@@ -6,9 +6,9 @@ package com.github.twinsod.notes.data.db;
 
 public class DatabaseConst {
 
-    public static final class DATABASE {
-        public static final String NAME = "notes_db.db";
-        public static final int VERSION = 1;
+    static final class DATABASE {
+        static final String NAME = "notes_db.db";
+        static final int VERSION = 1;
     }
 
     public static final class TABLE {
@@ -21,7 +21,7 @@ public class DatabaseConst {
         public static final String DATE = "date";
     }
 
-    public static final class QUERY {
+    static final class QUERY {
 
         static final String CREATE_TABLE_NOTES = "CREATE TABLE "
                 + TABLE.NOTES
