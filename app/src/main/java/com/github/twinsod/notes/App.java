@@ -9,7 +9,7 @@ import com.github.twinsod.notes.data.repository.NotesRepositoryImpl;
  * Created by User on 09-Jun-17.
  */
 
-public class LabApp extends Application {
+public class App extends Application {
     private static NotesRepository notesRepository;
 
     @Override

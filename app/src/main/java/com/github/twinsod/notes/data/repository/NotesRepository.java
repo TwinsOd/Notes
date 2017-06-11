@@ -3,7 +3,7 @@ package com.github.twinsod.notes.data.repository;
 import android.support.annotation.NonNull;
 
 import com.github.twinsod.notes.data.callback.NoteCallback;
-import com.github.twinsod.notes.ui.listNote.NoteModel;
+import com.github.twinsod.notes.data.models.NoteModel;
 
 import java.util.List;
 

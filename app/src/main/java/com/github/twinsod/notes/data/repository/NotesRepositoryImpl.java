@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import com.github.twinsod.notes.data.callback.NoteCallback;
 import com.github.twinsod.notes.data.db.DatabaseConst;
 import com.github.twinsod.notes.data.db.DatabaseHelper;
-import com.github.twinsod.notes.ui.listNote.NoteModel;
+import com.github.twinsod.notes.data.models.NoteModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -125,6 +125,7 @@ public class NotesRepositoryImpl implements NotesRepository {
                 model.setDescription(description);
                 long date = cursor.getLong(cursor.getColumnIndex(DatabaseConst.NOTES_FIELDS.DATE));
                 model.setDate(date);
+                model.setId(id);
                 cursor.close();
             }
             closeDB();

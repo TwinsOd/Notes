@@ -1,4 +1,4 @@
-package com.github.twinsod.notes.ui.listNote;
+package com.github.twinsod.notes.ui.listNote.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,17 +7,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.twinsod.notes.R;
+import com.github.twinsod.notes.data.models.NoteModel;
 import com.github.twinsod.notes.ui.customView.DataTextView;
+import com.github.twinsod.notes.ui.listNote.view.NoteInteractors;
 
 import java.util.List;
 
 
 public class NotesRecyclerViewAdapter extends RecyclerView.Adapter<NotesRecyclerViewAdapter.ViewHolder> {
 
-    private final List<NoteModel> mListNotes;
-    private final ListNotesFragment.OnListFragmentInteractionListener mListener;
+    private List<NoteModel> mListNotes;
+    private final NoteInteractors mListener;
 
-    public NotesRecyclerViewAdapter(List<NoteModel> items, ListNotesFragment.OnListFragmentInteractionListener listener) {
+    public NotesRecyclerViewAdapter(List<NoteModel> items, NoteInteractors listener) {
         mListNotes = items;
         mListener = listener;
     }
@@ -39,7 +41,7 @@ public class NotesRecyclerViewAdapter extends RecyclerView.Adapter<NotesRecycler
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    mListener.onShowNote(holder.mItemModel);
+                    mListener.onNoteClick(holder.mItemModel.getId());
                 }
             }
         });
@@ -48,6 +50,11 @@ public class NotesRecyclerViewAdapter extends RecyclerView.Adapter<NotesRecycler
     @Override
     public int getItemCount() {
         return mListNotes.size();
+    }
+
+    public void update(List<NoteModel> list) {
+        mListNotes = list;
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
