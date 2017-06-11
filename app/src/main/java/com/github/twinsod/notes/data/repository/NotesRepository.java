@@ -19,4 +19,6 @@ public interface NotesRepository {
     void saveNote(String text,@NonNull NoteCallback callback);
 
     void updateNote(long idNote, String text, @NonNull NoteCallback callback);
+
+    void deleteNote(long id, @NonNull NoteCallback callback);
 }

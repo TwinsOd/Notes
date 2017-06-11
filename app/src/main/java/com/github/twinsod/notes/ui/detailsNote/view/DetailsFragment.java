@@ -8,6 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -67,7 +70,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener, N
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
-
+        setHasOptionsMenu(true);
         TextView titleView = (TextView) view.findViewById(R.id.title_note);
         mEditView = (EditText) view.findViewById(R.id.edit_view);
         Button okButton = (Button) view.findViewById(R.id.ok_button);
@@ -133,5 +136,20 @@ public class DetailsFragment extends Fragment implements View.OnClickListener, N
         }
 
         getActivity().onBackPressed();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_details_fragment, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.delete_note) {
+            presenter.deleteNote(mNoteModel.getId());
+        }
+        return true;
     }
 }

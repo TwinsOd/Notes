@@ -7,4 +7,5 @@
     <string name="edit_note">Edit note</string>
     <string name="view_note">View note</string>
     <string name="save">save</string>
+    <string name="delete">delete</string>
 </resources>

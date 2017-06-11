@@ -18,4 +18,6 @@ public interface NotePresenter extends Presenter<NoteView> {
     void updateNote(@NonNull NoteModel noteModel);
 
     void saveNote(@NonNull String text);
+
+    void deleteNote(@NonNull long id);
 }

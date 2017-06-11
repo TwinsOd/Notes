@@ -47,6 +47,32 @@ public class NotesRepositoryImpl implements NotesRepository {
         update(idNote, text, callback);
     }
 
+    @Override
+    public void deleteNote(@NonNull long id, @NonNull NoteCallback callback) {
+        delete(id, callback);
+    }
+
+
+    private void delete(long id, NoteCallback callback) {
+        try {
+            openDB();
+            SQLiteStatement stmt = database.compileStatement(
+                    String.format("DELETE FROM %s WHERE %s = ?1",
+                            DatabaseConst.TABLE.NOTES, DatabaseConst.NOTES_FIELDS.ID));
+            database.beginTransaction();
+
+            stmt.clearBindings();
+            stmt.bindLong(1, id);
+            stmt.executeInsert();
+            database.setTransactionSuccessful();
+            database.endTransaction();
+            closeDB();
+            callback.onCompleted();
+        } catch (Exception e) {
+            callback.onError(e);
+        }
+    }
+
     private void loadListNotes(NoteCallback<List<NoteModel>> callback) {
         try {
             List<NoteModel> noteModels = new ArrayList<>();

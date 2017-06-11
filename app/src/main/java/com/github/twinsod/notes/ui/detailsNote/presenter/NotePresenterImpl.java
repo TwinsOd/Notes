@@ -57,7 +57,7 @@ public class NotePresenterImpl extends BasePresenter<NoteView> implements NotePr
 
             @Override
             public void onCompleted() {
-                onSaved();
+                onDone();
             }
 
             @Override
@@ -77,7 +77,27 @@ public class NotePresenterImpl extends BasePresenter<NoteView> implements NotePr
 
             @Override
             public void onCompleted() {
-                onSaved();
+                onDone();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                showError(throwable);
+            }
+        });
+    }
+
+    @Override
+    public void deleteNote(@NonNull long id) {
+        notesRepository.deleteNote(id, new NoteCallback() {
+            @Override
+            public void onEmit(Object data) {
+
+            }
+
+            @Override
+            public void onCompleted() {
+                onDone();
             }
 
             @Override
@@ -91,7 +111,7 @@ public class NotePresenterImpl extends BasePresenter<NoteView> implements NotePr
         Log.d("NotePresenterImpl", throwable.getMessage());
     }
 
-    private void onSaved() {
+    private void onDone() {
         if (getView() != null)
             getView().onCompleted();
     }
